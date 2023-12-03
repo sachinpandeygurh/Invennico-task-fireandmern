@@ -34,7 +34,7 @@ const TableComponent = () => {
 
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`https://invennicotask.onrender.com//v1/user/delete`, {
+      const res = await fetch(`https://invennicotask.onrender.com/v1/user/delete`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

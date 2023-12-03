@@ -11,7 +11,7 @@ function ViewDetails(props) {
   useEffect(() => {
     const getUserDetails = async () => {
       try {
-        const response = await axios.get(`https://invennicotask.onrender.com//v1/user/finduser/${props.id}`);
+        const response = await axios.get(`https://invennicotask.onrender.com/v1/user/finduser/${props.id}`);
         console.log("response.data.result", response.data);
         setUsers(response.data);
       } catch (error) {
