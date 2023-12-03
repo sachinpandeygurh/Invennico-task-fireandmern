@@ -62,9 +62,9 @@ const login = async (req, res) => {
 const updateAdmin = async (req, res) => {
   try {
     const email = req.body.email;
-
+console.log("req body", req.body)
     const result = await User.updateOne({ email: email }, { $set: req.body });
-// console.log(result)
+console.log(result)
     if (result.nModified > 0) {
       res.status(200).json({ message: "User updated successfully" });
     } else {
