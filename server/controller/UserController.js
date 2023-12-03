@@ -1,35 +1,39 @@
-const User = require("../model/UserModel");
 
+const User = require("../model/UserModel");
+const fs=require("fs");
 exports.AddUser = async (req, res) => {
   // Extract data from request body
-  const {
-    firstName,
-    lastName,
-    mobile,
-    email,
-    address,
-    status,
-    profilePicture,
-  } = req.body;
-
-  if (!firstName || !lastName || !mobile || !email || !address || !status) {
-    return res.status(400).json({ message: "All fields are required" });
-  }
+  
   try {
-    const newUser = await new User({
+    const {
       firstName,
-    lastName,
-    mobile,
-    email,
-    address,
-    status,
-    profilePicture,
-    }).save();
-    
+      lastName,
+      mobile,
+      email,
+      address,
+      status,
+    } = req.fields;
+   const {profilePicture}=req.files;
+  //  console.log(firstName,"firstName");
+  //  console.log(lastName,"lastName");
+  //  console.log(mobile,"mobile");
+  //  console.log(email,"email");
+  //  console.log(address,"address");
+  //  console.log(status,"status");
+  //  console.log(profilePicture,"profilePicture");
+    if (!firstName || !lastName || !mobile || !email || !address || !status) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+    const userr = new User({ ...req.fields});
+    if(profilePicture){
+      userr.profilePicture.data = fs.readFileSync(profilePicture.path);
+      userr.profilePicture.contentType = profilePicture.type;
+    }
+    await userr.save();
     res.status(201).send({
       success: true,
       message: "User Created Succesfully",
-      newUser,
+      userr,
     });
   } catch (error) {
     console.error(error);
@@ -57,7 +61,7 @@ exports.deleteUser = async (req, res) => {
         $set: req.body,
       }
     );
-    console.log(id);
+    // console.log(id);
     res
       .status(200)
       .send(result)
@@ -103,3 +107,20 @@ exports.findUser = async (req, res) => {
     res.status(500).json({ message: 'An error occurred' });
   }
 }
+exports.PhotoController = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.pid).select("profilePicture");
+    if (user.profilePicture.data.data) {
+      res.set("Content-type", user.profilePicture.contentType);
+      return res.status(200).send(user.profilePicture.data.data);
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Erorr while getting photo",
+      error,
+    });
+  }
+};
+

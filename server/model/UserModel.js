@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema({
@@ -29,8 +30,8 @@ const userSchema = mongoose.Schema({
     default: 'Active',
   },
   profilePicture: {
-    type: String, // Store the profile picture as a buffer
-    default: "https://res.cloudinary.com/brandads-tech/image/upload/v1661116705/cld-sample-3.jpg"
+    data: Buffer,
+    contentType: String,
   },
   
 });

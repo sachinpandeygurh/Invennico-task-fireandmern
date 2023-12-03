@@ -1,17 +1,19 @@
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
 
+import { initializeApp } from "firebase/app";
+import {getAuth,GoogleAuthProvider} from "firebase/auth";
 const firebaseConfig = {
-  apiKey: "AIzaSyBpWRssEdPhYJX_NX-3YOTL9-egnIviS-8",
-  authDomain: "ass-otp.firebaseapp.com",
-  projectId: "ass-otp",
-  storageBucket: "ass-otp.appspot.com",
-  messagingSenderId: "387708691196",
-  appId: "1:387708691196:web:c2b9955d9522a329786d79",
-  measurementId: "G-W04B3XKW19"
+  apiKey: "AIzaSyDMDNW4gPkcSYIkWJKsgxWWd7mWIi34vfI",
+  authDomain: "otpauth-a08ac.firebaseapp.com",
+  projectId: "otpauth-a08ac",
+  storageBucket: "otpauth-a08ac.appspot.com",
+  messagingSenderId: "610440294955",
+  appId: "1:610440294955:web:4b57d8115fc5835e65306e",
+  measurementId: "G-D5W4942BMM"
+
 };
 
 
 const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app)
+export const provider = new GoogleAuthProvider();
 
-export const auth = getAuth(app);

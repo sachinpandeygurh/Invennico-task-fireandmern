@@ -1,3 +1,4 @@
+
 // import React from "react";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
@@ -43,7 +44,8 @@ const TableComponent = () => {
 
       if (res.status === 200) {
         setFlag(!flag);
-        console.log("Document deleted successfully");
+        alert("Document deleted successfully");
+
       } else {
         console.error("Error deleting document");
       }

@@ -17,6 +17,11 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+
+  photo: {
+    type: String
+  },
+
 });
 
 const User = mongoose.model("Admin", userSchema);

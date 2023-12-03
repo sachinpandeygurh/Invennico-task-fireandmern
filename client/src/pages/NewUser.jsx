@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Form, InputGroup, Button } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
@@ -8,10 +9,10 @@ const NewUser = (props) => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("");
-  // const [profilePicture, setProfilePicture] = useState(null);
+  const [profilePicture, setProfilePicture] = useState("");
   const [mobile, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
-  const profilePicture ="https://res.cloudinary.com/brandads-tech/image/upload/v1661116705/cld-sample-3.jpg"
+  // const profilePicture ="https://res.cloudinary.com/brandads-tech/image/upload/v1661116705/cld-sample-3.jpg"
   
   const navigate = useNavigate();
 
@@ -45,28 +46,20 @@ const NewUser = (props) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    const formData = new FormData();
-    formData.append("firstName", firstName);
-    formData.append("lastName", lastName);
-    formData.append("email", email);
-    formData.append("status", status);
-    // formData.append("profilePicture", profilePicture);
-    formData.append("phoneNumber", mobile);
-    formData.append("address", address);
-    
-    console.log("formData" , formData);
-
     try {
+      const formData = new FormData();
+      formData.append("firstName", firstName);
+      formData.append("lastName", lastName);
+      formData.append("email", email);
+      formData.append("status", status);
+      formData.append("profilePicture", profilePicture);
+      formData.append("phoneNumber", mobile);
+      formData.append("address", address);
+      formData.append("mobile", mobile);
+      
       const result = await fetch(`http://localhost:8000/v1/user/adduser`, {
         method: 'POST',
-        body: JSON.stringify({    firstName,
-          lastName,
-          mobile,
-          email,
-          address,
-          status}),
-        headers: { 'Content-Type': 'application/json' },
+        body:formData
       });
 
       const data = await result.json();
@@ -138,7 +131,7 @@ const NewUser = (props) => {
               <Form.Control
                 type="file"
                 accept="image/*"
-                // onChange={handleProfilePictureChange}
+                onChange={(e)=>{setProfilePicture(e.target.files[0])}}
               />
             </Form.Group>
 

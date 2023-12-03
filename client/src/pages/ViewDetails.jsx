@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import Card from 'react-bootstrap/Card';
 import Modal from "react-bootstrap/Modal";
@@ -20,7 +21,12 @@ function ViewDetails(props) {
 
     getUserDetails();
   }, [props.id]);
-
+  const geturl=(user)=>{
+    // Assuming user.profilePicture.data is the buffer
+const base64String = Buffer.from(user.profilePicture.data).toString('base64');
+const dataURL = `data:${user.profilePicture.contentType};base64,${base64String}`;
+return dataURL;
+  }
   return (
     <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
       <Modal.Header closeButton>
@@ -31,7 +37,7 @@ function ViewDetails(props) {
       <Modal.Body className="grid-example">
         {users.map((user, index) => (
           <Card key={index}>
-            <Card.Img className="rounded" variant="top" src={user.profilePicture} />
+            <Card.Img className="rounded" variant="top" src={geturl(user)} />
             <Card.Body>
               <Card.Title>
                 {user.firstName} {user.lastName}

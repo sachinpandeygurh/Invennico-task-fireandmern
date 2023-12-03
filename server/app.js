@@ -22,3 +22,4 @@ app.use("/v1/user", require("./route/UserRoutes"));
 app.listen(port, () => {
   console.log(`server is connected to the port ${port}`);
 });
+

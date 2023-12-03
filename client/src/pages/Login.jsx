@@ -1,6 +1,8 @@
-import {  useState } from "react";
+import { useEffect, useState } from "react";
+import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
-import { auth } from "../firebase";
+import { auth, provider } from "../firebase";
+import { signInWithPopup } from "firebase/auth";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 // import Image from "../src/img/cart/Mobile 1.png";
 import axios from "axios";
@@ -11,8 +13,8 @@ const Cart21Login = ({ handleLogin }) => {
   const [otp, setOtp] = useState("");
   const [toggle, setToggle] = useState(false);
   const [userData, setUserData] = useState([]);
-
-  
+  const [value, setValue] = useState("");
+  const [email, setEmail] = useState("");
 
   const HandleChange = (e) => {
     const inputValue = e.target.value;
@@ -99,10 +101,9 @@ const Cart21Login = ({ handleLogin }) => {
         })
         .catch((err) => {
           console.log(err);
-          alert("Error: " + err.response.data.message); //handle user if it is not registered
+          alert("Error: " + err.response.data.message);
         });
     }
-    
   };
 
   const submit = (e) => {
@@ -110,6 +111,60 @@ const Cart21Login = ({ handleLogin }) => {
     verifyMobile();
   };
 
+  useEffect(() => {
+  
+  }, []);
+
+  const handleClick = async () => {
+    try {
+      const { user } = await signInWithPopup(auth, provider);
+
+      if (!user) {
+        alert("User not authorized");
+        return;
+      }
+      const userData = {
+        email: user.email,
+        photo: user.photoURL,
+        name: user.displayName,
+        mobile: user.phoneNumber || "+91 8319697083",
+        DoB: "12-03-1999",
+      };
+      console.log("userData",userData);
+
+      const response = await axios.put(
+        "http://localhost:8000/update",
+        {
+          email: userData.email,
+          phone: userData.mobile,
+          DoB: userData.DoB,
+          name: userData.name,
+          photo: userData.photo,
+          },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "access-control-allow-origin",
+          },
+        }
+        );
+        console.log("userData", ...userData);
+
+      if (response.status === 200 || response.status === 201) {
+        console.log(response.data);
+        localStorage.setItem("user", JSON.stringify(userData));
+        handleLogin(true);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error: " + error.response?.data?.message || "An error occurred");
+    }
+    console.log("userData", userData);
+    console.log("JSON.stringify(userData)", JSON.stringify(userData));
+    localStorage.setItem("user", JSON.stringify(userData));
+    handleLogin(true);
+  };
   return (
     <>
       <div className="container-fluid bgc">
@@ -157,7 +212,7 @@ const Cart21Login = ({ handleLogin }) => {
                             policy
                           </div> */}
                           <div className="midLinks">
-                            <span className="text-dark mx-2">
+                            <span className="text-dark mx-2 fw-bold">
                               Do not have account
                             </span>
                             <Link
@@ -195,6 +250,27 @@ const Cart21Login = ({ handleLogin }) => {
                           </div>
                         )}
                       </form>
+                    </div>
+                    <div className="text-center">
+                      <br />
+                      <span className="text-muted">or</span>
+                      <br />
+                      <br />
+                      <Button
+                        color="white"
+                        className="p-0 border-1"
+                        outline
+                        onClick={handleClick}
+                      >
+                        <span className="d-flex align-items-center ">
+                          <span className="fa fa-google text-danger fa-2x bg-white p-2 rounded"></span>
+                          <span className="text-white p-2">
+                            {email
+                              ? "Continue with Google"
+                              : "Login with Google"}
+                          </span>
+                        </span>
+                      </Button>
                     </div>
                   </div>
                 </div>

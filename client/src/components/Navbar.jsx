@@ -17,7 +17,9 @@ const Navbar = () => {
   };
   const handleLogOut = () => {
     window.localStorage.removeItem("user");
-  };
+
+    window.location.reload()
+ };
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
