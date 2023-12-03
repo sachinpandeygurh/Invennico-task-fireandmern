@@ -15,7 +15,7 @@ const EditUser = (props) => {
 
   const getUserDetails = async () => {
     try {
-      const result = await axios.get(`http://localhost:8000/v1/user/finduser/${props.id}`);
+      const result = await axios.get(`https://invennicotask.onrender.com//v1/user/finduser/${props.id}`);
       setUsers(result?.data);
     } catch (error) {
       console.warn("error:", error);
@@ -36,7 +36,7 @@ const EditUser = (props) => {
 console.log("click");
 console.log("id", props.id)
     try {
-      const result = await axios.put(`http://localhost:8000/v1/user/updateuser/${props.id}`,  {
+      const result = await axios.put(`https://invennicotask.onrender.com//v1/user/updateuser/${props.id}`,  {
 
         headers: { "Content-Type": "application/json" },
 

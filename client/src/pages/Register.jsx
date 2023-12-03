@@ -45,7 +45,7 @@ const Register = () => {
     } else {
       await axios
         .post(
-          "http://localhost:8000/login",
+          "https://invennicotask.onrender.com//login",
           {
             mobile: mobileNo,
           },
@@ -93,7 +93,7 @@ const Register = () => {
           //  if(result){
           axios
             .post(
-              "http://localhost:8000/register",
+              "https://invennicotask.onrender.com//register",
               {
                 name: name,
                 mobile: mobileNo,

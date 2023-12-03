@@ -57,7 +57,7 @@ const NewUser = (props) => {
       formData.append("address", address);
       formData.append("mobile", mobile);
       
-      const result = await fetch(`http://localhost:8000/v1/user/adduser`, {
+      const result = await fetch(`https://invennicotask.onrender.com//v1/user/adduser`, {
         method: 'POST',
         body:formData
       });

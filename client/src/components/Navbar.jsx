@@ -29,8 +29,8 @@ const Navbar = () => {
               ""
             ) : (
               <>
-                <li className="nav-item mx-2 d-flex">
-                  <h5 className="text-success mx-1 my-0">Welcome </h5>
+                <li className="nav-item mx-2 d-flex btn align-items-center">
+                  <h6 className="text-success mx-1 my-0">Admin User </h6>
                   <Link
                     className="nav-link active my-0"
                     aria-current="page"

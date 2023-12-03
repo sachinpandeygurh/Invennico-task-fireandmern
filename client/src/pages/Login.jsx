@@ -79,7 +79,7 @@ const Cart21Login = ({ handleLogin }) => {
     } else {
       await axios
         .post(
-          "http://localhost:8000/login",
+          "https://invennicotask.onrender.com//login",
           {
             mobile: number,
           },
@@ -133,10 +133,10 @@ const Cart21Login = ({ handleLogin }) => {
       console.log("userData",userData);
 
       const response = await axios.put(
-        "http://localhost:8000/update",
+        "https://invennicotask.onrender.com/update",
         {
           email: userData.email,
-          phone: userData.mobile,
+          mobile: userData.mobile,
           DoB: userData.DoB,
           name: userData.name,
           photo: userData.photo,
@@ -149,7 +149,7 @@ const Cart21Login = ({ handleLogin }) => {
           },
         }
         );
-        console.log("userData", ...userData);
+        console.log("userData", userData);
 
       if (response.status === 200 || response.status === 201) {
         console.log(response.data);
@@ -160,10 +160,9 @@ const Cart21Login = ({ handleLogin }) => {
       console.error(error);
       alert("Error: " + error.response?.data?.message || "An error occurred");
     }
-    console.log("userData", userData);
+    // console.log("userData", userData);
     console.log("JSON.stringify(userData)", JSON.stringify(userData));
-    localStorage.setItem("user", JSON.stringify(userData));
-    handleLogin(true);
+   
   };
   return (
     <>
