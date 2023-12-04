@@ -9,16 +9,25 @@ function ViewDetails(props) {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
+    // const getUserDetails = async () => {
+    //   try {
+    //     const response = await axios.get(`https://invennicotask.onrender.com/v1/user/finduser/${props.id}`);
+    //     // console.log("response.data.result", response.data);
+    //     setUsers(response.data);
+    //   } catch (error) {
+    //     console.warn("error:", error);
+    //   }
+    // };
     const getUserDetails = async () => {
       try {
-        const response = await axios.get(`https://invennicotask.onrender.com/v1/user/finduser/${props.id}`);
-        console.log("response.data.result", response.data);
-        setUsers(response.data);
+        const result = await axios.get(
+          `https://invennicotask.onrender.com/v1/user/finduser/${props.id}`
+        );
+        setUsers(result?.data);
       } catch (error) {
         console.warn("error:", error);
       }
     };
-
     getUserDetails();
   }, [props.id]);
   const geturl=(user)=>{
@@ -35,20 +44,21 @@ return dataURL;
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="grid-example">
-        {users.map((user, index) => (
-          <Card key={index}>
-            <Card.Img className="rounded" variant="top" src={geturl(user)} />
-            <Card.Body>
-              <Card.Title>
-                {user.firstName} {user.lastName}
-              </Card.Title>
-              <Card.Text>Email: {user.email}</Card.Text>
-              <Card.Text>Status: {user.status}</Card.Text>
-              <Card.Text>Phone Number: {user.phoneNumber}</Card.Text>
-              <Card.Text>Address: {user.address}</Card.Text>
-            </Card.Body>
-          </Card>
-        ))}
+      {users.filter((user, index) => index === props.index).map((user, index) => (
+  <Card key={index}>
+    <Card.Img className="rounded" variant="top" src={geturl(user)} />
+    <Card.Body>
+      <Card.Title>
+        {user.firstName} {user.lastName}
+      </Card.Title>
+      <Card.Text>Email: {user.email}</Card.Text>
+      <Card.Text>Status: {user.status}</Card.Text>
+      <Card.Text>Phone Number: {user.phoneNumber}</Card.Text>
+      <Card.Text>Address: {user.address}</Card.Text>
+    </Card.Body>
+  </Card>
+))}
+
         {users.length === 0 && <p>Loading user details...</p>}
       </Modal.Body>
       <Modal.Footer>

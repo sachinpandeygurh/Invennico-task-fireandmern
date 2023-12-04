@@ -15,6 +15,8 @@ const Cart21Login = ({ handleLogin }) => {
   const [userData, setUserData] = useState([]);
   const [value, setValue] = useState("");
   const [email, setEmail] = useState("");
+  const [flag, setFlag] = useState(false);
+
 
   const HandleChange = (e) => {
     const inputValue = e.target.value;
@@ -79,7 +81,7 @@ const Cart21Login = ({ handleLogin }) => {
     } else {
       await axios
         .post(
-          "https://invennicotask.onrender.com/login",
+          "http://localhost:8000/login",
           {
             mobile: number,
           },
@@ -101,9 +103,10 @@ const Cart21Login = ({ handleLogin }) => {
         })
         .catch((err) => {
           console.log(err);
-          alert("Error: " + err.response.data.message);
+          alert("Error: " + err.response.data.message); //handle user if it is not registered
         });
     }
+    
   };
 
   const submit = (e) => {
@@ -111,18 +114,20 @@ const Cart21Login = ({ handleLogin }) => {
     verifyMobile();
   };
 
-  useEffect(() => {
-  
-  }, []);
+
+  useEffect(() => {}, []);
 
   const handleClick = async () => {
+    setFlag(true);
     try {
       const { user } = await signInWithPopup(auth, provider);
-
+      // console.log("user", user);
       if (!user) {
         alert("User not authorized");
         return;
       }
+      // console.log("user", user);
+
       const userData = {
         email: user.email,
         photo: user.photoURL,
@@ -130,7 +135,7 @@ const Cart21Login = ({ handleLogin }) => {
         mobile: user.phoneNumber || "+91 8319697083",
         DoB: "12-03-1999",
       };
-      console.log("userData",userData);
+      console.log("userData", userData);
 
       const response = await axios.put(
         "https://invennicotask.onrender.com/update",
@@ -140,7 +145,7 @@ const Cart21Login = ({ handleLogin }) => {
           DoB: userData.DoB,
           name: userData.name,
           photo: userData.photo,
-          },
+        },
         {
           headers: {
             "Content-Type": "application/json",
@@ -148,11 +153,11 @@ const Cart21Login = ({ handleLogin }) => {
             "Access-Control-Allow-Headers": "access-control-allow-origin",
           },
         }
-        );
-        console.log("userData", userData);
+      );
+      console.log("userData", userData);
 
       if (response.status === 200 || response.status === 201) {
-        console.log(response.data);
+        // console.log(response.data);
         localStorage.setItem("user", JSON.stringify(userData));
         handleLogin(true);
       }
@@ -162,8 +167,8 @@ const Cart21Login = ({ handleLogin }) => {
     }
     // console.log("userData", userData);
     console.log("JSON.stringify(userData)", JSON.stringify(userData));
-   
   };
+
   return (
     <>
       <div className="container-fluid bgc">
@@ -173,6 +178,11 @@ const Cart21Login = ({ handleLogin }) => {
               <div className="col">
                 <div className="row">
                   <div className="login-img">
+                    <p
+                      style={!flag ? { display: "none" } : { display: "block" }}
+                    >
+                      Loading please wait ....
+                    </p>
                     {/* <img src={Image} alt="loginimage" /> */}
                   </div>
                 </div>

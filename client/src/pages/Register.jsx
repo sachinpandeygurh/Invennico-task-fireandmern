@@ -40,12 +40,12 @@ const Register = () => {
   // Function to handle form submission
   const handleRegister = async (e) => {
     e.preventDefault();
-    if (!name || !email || !mobileNo) {
+    if (!name || !email ||  !mobileNo) {
       console.log("fil all the fields");
     } else {
       await axios
         .post(
-          "https://invennicotask.onrender.com/login",
+          "http://localhost:8000/login",
           {
             mobile: mobileNo,
           },
@@ -93,9 +93,10 @@ const Register = () => {
           //  if(result){
           axios
             .post(
-              "https://invennicotask.onrender.com/register",
+              "http://localhost:8000/register",
               {
                 name: name,
+               
                 mobile: mobileNo,
                 email: email,
                 DoB: dob,
@@ -110,7 +111,7 @@ const Register = () => {
             )
             .then((data) => {
               if (data.status === 201) {
-                navigate('/dashboard')
+                navigate('/login')
                 console.log(data);
                 alert(data.data.message);
               }
@@ -155,7 +156,7 @@ const Register = () => {
                             </label>
                           </div>
                         </div>
-                       
+                        
                         <div className="d-flex flex-row align-items-center mb-4">
                           {/* <i className="fas fa-envelope fa-lg me-3 fa-fw"></i> */}
                           <div className="form-outline flex-fill mb-0">
