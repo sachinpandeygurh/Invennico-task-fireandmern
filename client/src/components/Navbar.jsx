@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NewUser from "../pages/NewUser";
 
 const Navbar = () => {
   const [searchIcon, setSearchIcon] = useState(false);
+  const navigate = useNavigate();
 
   const userData = localStorage.getItem("user");
   const user = JSON.parse(userData);
@@ -17,7 +18,7 @@ const Navbar = () => {
   };
   const handleLogOut = () => {
     window.localStorage.removeItem("user");
-
+    navigate("/");
     window.location.reload()
  };
   return (

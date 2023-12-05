@@ -35,33 +35,35 @@ const EditUser = (props) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    console.log(users);
     try {
       const result = await axios.put(
-        `http://localhost:8000/v1/user/updateuser/${props.id}`,
-        users,
+        `https://invennicotask.onrender.com/v1/user/updateuser/${props.id}`,
+        users[props.index],
         {
           headers: { "Content-Type": "application/json" },
         }
-      );
-
-      if (result.data.success) {
-        alert("User updated successfully");
+      )
+  
+      if (result.data && result.data.message === "User updated successfully") {
+        console.log("Updated User Data:", result.data.updatedUser);
+        alert(result.data.message );
         handleClose();
         navigate("/");
       } else {
-        console.error("Error updating user:", result.data.error);
-        alert("Error updating user:", result.data.error);
+        console.error("Error updating user:", result.data.message);
+        alert("Error updating user: " + result.data.message);
       }
     } catch (error) {
       console.error("An error occurred:", error);
     }
   };
+  
 
   const handleClose = () => {
     props.onHide();
   };
-
+console.log(users)
   return (
     <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
       <Modal.Header closeButton>
