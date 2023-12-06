@@ -105,6 +105,7 @@ exports.findUser = async (req, res) => {
     const userId = req.params.id; 
 
     const result = await User.findById(userId);
+    // console.log(result);
 
     if (!result) {
       return res.status(404).json({ message: 'User not found' });
@@ -116,6 +117,7 @@ exports.findUser = async (req, res) => {
     res.status(500).json({ message: 'An error occurred' });
   }
 }
+
 exports.PhotoController = async (req, res) => {
   try {
     const user = await User.findById(req.params.pid).select("profilePicture");
