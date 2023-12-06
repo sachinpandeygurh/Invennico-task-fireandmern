@@ -10,44 +10,40 @@ const EditUser = (props) => {
 
   useEffect(() => {
     getUserDetails();
-  }, []);
+  }, [props.id]);
 
   const getUserDetails = async () => {
     try {
       const result = await axios.get(
-        `https://invennicotask.onrender.com/v1/user/finduser/${props.id}`
+        `http://localhost:8000/v1/user/finduser/${props.id}`
       );
-      setUsers(result?.data);
+      setUsers(result?.data?.result);
+     
     } catch (error) {
       console.warn("error:", error);
     }
   };
 
-  const handleInputChange = (index, e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    setUsers((prevUsers) =>
-      prevUsers.map((user, i) =>
-        i === index ? { ...user, [name]: value } : user
-      )
-    );
+    setUsers((prevUser) => ({ ...prevUser, [name]: value }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(users);
+   
     try {
       const result = await axios.put(
-        `https://invennicotask.onrender.com/v1/user/updateuser/${props.id}`,
-        users[props.index],
+        `http://localhost:8000/v1/user/updateuser/${props.id}`,
+        users,
         {
           headers: { "Content-Type": "application/json" },
         }
-      )
-  
+      );
+
       if (result.data && result.data.message === "User updated successfully") {
-        console.log("Updated User Data:", result.data.updatedUser);
-        alert(result.data.message );
+        alert(result.data.message);
         handleClose();
         navigate("/");
       } else {
@@ -58,12 +54,11 @@ const EditUser = (props) => {
       console.error("An error occurred:", error);
     }
   };
-  
 
   const handleClose = () => {
     props.onHide();
   };
-console.log(users)
+  
   return (
     <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
       <Modal.Header closeButton>
@@ -71,94 +66,90 @@ console.log(users)
       </Modal.Header>
       <Modal.Body className="grid-example">
         <div className=" ">
-          {Array.isArray(users) &&
-            users.map((user, index) => (
-              <Form className="my-4" onSubmit={handleSubmit} key={index}>
-                <h6 className="m-auto y-3 text-center text-info">
-                  User {index + 1}.
-                </h6>
-                <Form.Group controlId="formFirstName">
-                  <Form.Label>First Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter your first name"
-                    name="firstName"
-                    value={user.firstName}
-                    onChange={(e) => handleInputChange(index, e)}
-                  />
-                </Form.Group>
+        {!users.email? (<p className="text-center text-info "> Loading please wait ...</p>) :(
+          <Form className="my-4" onSubmit={handleSubmit}>
+            <h6 className="m-auto y-3 text-center text-info">User Details.</h6>
+           
 
-                <Form.Group controlId="formLastName">
-                  <Form.Label>Last Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter your last name"
-                    name="lastName"
-                    value={user.lastName}
-                    onChange={(e) => handleInputChange(index, e)}
-                  />
-                </Form.Group>
+            <Form.Group controlId="formFirstName">
+              <Form.Label>First Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter your first name"
+                name="firstName"
+                value={users.firstName}
+                 onChange={(e) => handleInputChange(e)}
+              />
+            </Form.Group>
 
-                <Form.Group controlId="formEmail">
-                  <Form.Label>Email address</Form.Label>
-                  <Form.Control
-                    type="email"
-                    placeholder="Enter your email address"
-                    name="email"
-                    value={user.email}
-                    onChange={(e) => handleInputChange(index, e)}
-                  />
-                </Form.Group>
+            <Form.Group controlId="formLastName">
+              <Form.Label>Last Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter your last name"
+                name="lastName"
+                value={users.lastName}
+                 onChange={(e) => handleInputChange(e)}
+              />
+            </Form.Group>
 
-                <Form.Group controlId="formStatus">
-                  <Form.Label>Status</Form.Label>
-                  <Form.Select
-                    value={user.status}
-                    name="status"
-                    onChange={(e) => handleInputChange(index, e)}
-                  >
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
-                  </Form.Select>
-                </Form.Group>
+            <Form.Group controlId="formEmail">
+              <Form.Label>Email address</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Enter your email address"
+                name="email"
+                value={users.email}
+                 onChange={(e) => handleInputChange(e)}
+              />
+            </Form.Group>
 
-                <Form.Group controlId="formProfilePicture">
-                  <Form.Label>Profile Picture</Form.Label>
-                  <Form.Control type="file" accept="image/*" />
-                </Form.Group>
+            <Form.Group controlId="formStatus">
+              <Form.Label>Status</Form.Label>
+              <Form.Select
+                value={users.status}
+                name="status"
+                 onChange={(e) => handleInputChange(e)}
+              >
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </Form.Select>
+            </Form.Group>
 
-                <Form.Group controlId="formPhoneNumber">
-                  <Form.Label>Phone Number</Form.Label>
-                  <InputGroup>
-                    <InputGroup.Text id="inputGroupPrepend">
-                      +91
-                    </InputGroup.Text>
-                    <Form.Control
-                      type="tel"
-                      placeholder="Enter your phone number"
-                      name="mobile"
-                      value={user.mobile}
-                      onChange={(e) => handleInputChange(index, e)}
-                    />
-                  </InputGroup>
-                </Form.Group>
+            <Form.Group controlId="formProfilePicture">
+              <Form.Label>Profile Picture</Form.Label>
+              <Form.Control type="file" accept="image/*" />
+            </Form.Group>
 
-                <Form.Group controlId="formAddress">
-                  <Form.Label>Address</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter your address"
-                    name="address"
-                    value={user.address}
-                    onChange={(e) => handleInputChange(index, e)}
-                  />
-                </Form.Group>
+            <Form.Group controlId="formPhoneNumber">
+              <Form.Label>Phone Number</Form.Label>
+              <InputGroup>
+                <InputGroup.Text id="inputGroupPrepend">+91</InputGroup.Text>
+                <Form.Control
+                  type="tel"
+                  placeholder="Enter your phone number"
+                  name="mobile"
+                  value={users.mobile}
+                   onChange={(e) => handleInputChange(e)}
+                />
+              </InputGroup>
+            </Form.Group>
 
-                <Button className="my-3" variant="primary" type="submit">
-                  Update User
-                </Button>
-              </Form>
-            ))}
+            <Form.Group controlId="formAddress">
+              <Form.Label>Address</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter your address"
+                name="address"
+                value={users.address}
+                 onChange={(e) => handleInputChange(e)}
+              />
+            </Form.Group>
+
+            <Button className="my-3" variant="primary" type="submit">
+              Update User
+            </Button>
+          </Form>)}
         </div>
       </Modal.Body>
       <Modal.Footer>

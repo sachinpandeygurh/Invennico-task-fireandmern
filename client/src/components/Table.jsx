@@ -1,42 +1,39 @@
+import { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import EditUser from "../pages/EditUser";
-import axios from "axios";
-import { useEffect, useState } from "react";
 import ViewDetails from "../pages/ViewDetails";
-import { trusted } from "mongoose";
+import axios from "axios";
 
 const TableComponent = () => {
-  const randomStatus = () => {
-    return Math.random() < 0.5 ? "Active" : "Inactive";
-  };
-
   const [modalShow, setModalShow] = useState(false);
   const [modalsh, setModalsh] = useState(false);
   const [users, setUsers] = useState([]);
   const [flag, setFlag] = useState(false);
+  const [userId, setUserId] = useState(null);
+  const [EduserId, setEdUserId] = useState(null);
 
   useEffect(() => {
     getUsers();
   }, []);
+
   const getUsers = async () => {
     try {
       const result = await axios.get(
-        "https://invennicotask.onrender.com/v1/user/getuser"
+        "http://localhost:8000/v1/user/getuser"
       );
-      // console.log("result", result);
-      // console.log("users", users);
       setFlag(true);
       setUsers(result?.data);
+
+    
     } catch (error) {
-      console.warn("error:", error);
+      console.error("Error fetching users:", error);
     }
   };
-
   const handleDelete = async (id) => {
     try {
       const res = await fetch(
-        `https://invennicotask.onrender.com/v1/user/delete`,
+        `http://localhost:8000/v1/user/delete`,
         {
           method: "DELETE",
           headers: {
@@ -55,12 +52,17 @@ const TableComponent = () => {
       console.error("An error occurred:", error);
     }
   };
-  const handleClick = (userId) => {
-    setModalShow(true);
-    // console.log("userId", userId);
-  };
-  // console.log(users);
 
+  const handleEdit = (EduserId) => {
+    setModalShow(true);
+    setEdUserId(EduserId);
+  };
+
+  const handledetails = (userId) => {
+    setModalsh(true);
+    setUserId(userId);
+  };
+  
   return (
     <Table striped bordered hover variant="light" responsive>
       <thead>
@@ -74,69 +76,64 @@ const TableComponent = () => {
       </thead>
       <tbody>
         {!flag ? (
-          <p className="text-dark m-auto">Loading please wait...</p>
+          <tr align="center">
+            <td colSpan="5" className="text-dark">
+              Loading please wait...
+            </td>
+          </tr>
         ) : (
           users.map((user, index) => (
-            <>
-              <tr key={index} align="center">
-                <td>{index + 1}</td>
-                <td>{`${user.firstName} ${user.lastName}`}</td>
-                <td>{user.email}</td>
-                <td
-                  className={
-                    user.status === "Active" ? "text-success" : "text-danger"
-                  }
-                >
-                  {user.status}
-                </td>
-                <td>
-                  <div className="d-flex justify-content-evenly">
-                    <Button
-                      variant="primary"
-                      className="btn-sm m-1"
-                      onClick={() => handleClick(user._id)}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="danger"
-                      className="btn-sm m-1 btn"
-                      onClick={() => handleDelete(user._id)}
-                    >
-                      Delete
-                    </Button>
-                    <Button
-                      variant="success"
-                      className="btn-sm m-1"
-                      onClick={() => setModalsh(true)}
-                    >
-                      View Details
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-              <EditUser
-                id={user._id}
-                index={index}
-                show={modalShow}
-                onHide={() => setModalShow(false)}
-              />
-              <ViewDetails
-                id={user._id}
-                index={index}
-                show={modalsh}
-                onHide={() => setModalsh(false)}
-              />
-                 {/* <ViewDetails
-                id={user._id}
-                // show={modalsh === index}
-                onHide={() => setModalsh(false)}
-                user={user} 
-              /> */}
-            </>
+            <tr key={index} align="center">
+              <td>{index + 1}</td>
+              <td>{`${user.firstName} ${user.lastName}`}</td>
+              <td>{user.email}</td>
+              <td
+                className={
+                  user.status === "Active" ? "text-success" : "text-danger"
+                }
+              >
+                {user.status}
+              </td>
+              <td>
+                <div className="d-flex justify-content-evenly">
+                  <Button
+                    variant="primary"
+                    className="btn-sm m-1"
+                    onClick={() => handleEdit(user._id)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="danger"
+                    className="btn-sm m-1 btn"
+                    onClick={() => handleDelete(user._id)}
+                  >
+                    Delete
+                  </Button>
+                  <Button
+                    variant="success"
+                    className="btn-sm m-1"
+                    onClick={() => handledetails(user._id)}
+                  >
+                    View Details
+                  </Button>
+                </div>
+              </td>
+            </tr>
           ))
         )}
       </tbody>
+      <EditUser
+        id={EduserId}
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+      />
+
+      <ViewDetails
+        id={userId}
+        show={modalsh}
+        onHide={() => setModalsh(false)}
+      />
     </Table>
   );
 };

@@ -1,41 +1,37 @@
-
 import React, { useState, useEffect } from "react";
-import Card from 'react-bootstrap/Card';
+import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
 import { Link } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
+import { Buffer } from 'buffer';
 
 function ViewDetails(props) {
   const [users, setUsers] = useState([]);
+  const [flag , setFlag] = useState(false)
 
   useEffect(() => {
-    // const getUserDetails = async () => {
-    //   try {
-    //     const response = await axios.get(`https://invennicotask.onrender.com/v1/user/finduser/${props.id}`);
-    //     // console.log("response.data.result", response.data);
-    //     setUsers(response.data);
-    //   } catch (error) {
-    //     console.warn("error:", error);
-    //   }
-    // };
-    const getUserDetails = async () => {
-      try {
-        const result = await axios.get(
-          `https://invennicotask.onrender.com/v1/user/finduser/${props.id}`
-        );
-        setUsers(result?.data);
-      } catch (error) {
-        console.warn("error:", error);
-      }
-    };
     getUserDetails();
   }, [props.id]);
-  const geturl=(user)=>{
-    // Assuming user.profilePicture.data is the buffer
-const base64String = Buffer.from(user.profilePicture.data).toString('base64');
-const dataURL = `data:${user.profilePicture.contentType};base64,${base64String}`;
-return dataURL;
-  }
+  const getUserDetails = async () => {
+    try {
+      const result = await axios.get(
+        `http://localhost:8000/v1/user/finduser/${props.id}`
+      );
+      setUsers(result?.data.result);
+      setFlag(true)
+     
+    } catch (error) {
+      console.warn("error:", error);
+    }
+  };
+ 
+  const geturl = (users) => {
+const base64String = Buffer.from(users.profilePicture.data.data).toString("base64");
+    const dataURL = `data:${users.profilePicture.contentType};base64,${base64String}`;
+   
+    return dataURL;
+  };
+  
   return (
     <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
       <Modal.Header closeButton>
@@ -44,22 +40,23 @@ return dataURL;
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="grid-example">
-      {users.filter((user, index) => index === props.index).map((user, index) => (
-  <Card key={index}>
-    <Card.Img className="rounded" variant="top" src={geturl(user)} />
-    <Card.Body>
-      <Card.Title>
-        {user.firstName} {user.lastName}
-      </Card.Title>
-      <Card.Text>Email: {user.email}</Card.Text>
-      <Card.Text>Status: {user.status}</Card.Text>
-      <Card.Text>Phone Number: {user.phoneNumber}</Card.Text>
-      <Card.Text>Address: {user.address}</Card.Text>
-    </Card.Body>
-  </Card>
-))}
+        {!users ?  (
+          <p>Loading user details...</p>
+        ): (
+          <Card>
+           { !flag? (<p className="text-info"> loading...</p>):( <Card.Img className="rounded" variant="top" src={geturl(users)} /> )}
 
-        {users.length === 0 && <p>Loading user details...</p>}
+            <Card.Body> 
+              <Card.Title>
+                {users.firstName} {users.lastName}
+              </Card.Title>
+              <Card.Text>Email: {users.email}</Card.Text>
+              <Card.Text>Status: {users.status}</Card.Text>
+              <Card.Text>Phone Number: {users.mobile}</Card.Text>
+              <Card.Text>Address: {users.address}</Card.Text>
+            </Card.Body>
+          </Card>
+        ) }
       </Modal.Body>
       <Modal.Footer>
         <Link onClick={props.onHide}>Close</Link>
