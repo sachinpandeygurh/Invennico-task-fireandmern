@@ -55,17 +55,11 @@ exports.GetUsers = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
   try {
-    const result = await User.deleteOne(
-      { id: req.params._id },
-      {
-        $set: req.body,
-      }
-    );
-    // console.log(id);
-    res
-      .status(200)
-      .send(result)
-      .json({ message: "Document deleted successfully" });
+    const result = await User.deleteOne({ id: req.params._id });
+    res.status(200).json({
+      result,
+      message: "Document deleted successfully",
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "An error occurred" });
@@ -113,7 +107,7 @@ exports.findUser = async (req, res) => {
 
     res.status(200).json({ message: 'User found successfully', result });
   } catch (error) {
-    console.error(error);
+    console.error("abhishek",error);
     res.status(500).json({ message: 'An error occurred' });
   }
 }
