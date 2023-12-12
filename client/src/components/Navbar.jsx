@@ -19,18 +19,18 @@ const Navbar = () => {
   const handleLogOut = () => {
     window.localStorage.removeItem("user");
     navigate("/");
-    window.location.reload()
- };
+    window.location.reload();
+  };
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
-          <Link className="navbar-brand mx-4" to="/">
+          <div className="navbar-brand mx-4">
             {!userData ? (
               ""
             ) : (
               <>
-                <li className="nav-item mx-2 d-flex btn align-items-center">
+                <div className="nav-item mx-2 d-flex btn align-items-center">
                   <h6 className="text-success mx-1 my-0">Admin User </h6>
                   <Link
                     className="nav-link active my-0"
@@ -39,10 +39,10 @@ const Navbar = () => {
                   >
                     {user.name.charAt(0).toUpperCase() + user.name.slice(1)}
                   </Link>
-                </li>
+                </div>
               </>
             )}
-          </Link>
+          </div>
           <button
             className="navbar-toggler"
             type="button"

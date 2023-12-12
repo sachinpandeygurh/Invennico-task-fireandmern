@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import EditUser from "../pages/EditUser";
 import ViewDetails from "../pages/ViewDetails";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const TableComponent = () => {
   const [modalShow, setModalShow] = useState(false);
@@ -12,6 +13,7 @@ const TableComponent = () => {
   const [flag, setFlag] = useState(false);
   const [userId, setUserId] = useState(null);
   const [EduserId, setEdUserId] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getUsers();
@@ -19,32 +21,29 @@ const TableComponent = () => {
 
   const getUsers = async () => {
     try {
-      const result = await axios.get(
-        "http://localhost:8000/v1/user/getuser"
-      );
+      const result = await axios.get("http://localhost:8000/v1/user/getuser", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       setFlag(true);
       setUsers(result?.data);
-
-    
     } catch (error) {
       console.error("Error fetching users:", error);
     }
   };
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(
-        `http://localhost:8000/v1/user/delete`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id: id }),
-        }
-      );
-
+      const res = await axios.delete(`http://localhost:8000/v1/user/delete`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: { id },
+      });
+  
       if (res.status === 200) {
         alert("Document deleted successfully");
+        navigate("/");
       } else {
         console.error("Error deleting document");
       }
@@ -58,11 +57,11 @@ const TableComponent = () => {
     setEdUserId(EduserId);
   };
 
-  const handledetails = (userId) => {
+  const handledetails = (userIdd) => {
     setModalsh(true);
-    setUserId(userId);
+    setUserId(userIdd);
   };
-  
+
   return (
     <Table striped bordered hover variant="light" responsive>
       <thead>

@@ -98,7 +98,7 @@ const Cart21Login = ({ handleLogin }) => {
             setUserData(data.data.user);
             setToggle(true);
             goForOTP();
-            console.log(data);
+            // console.log(data);
           }
         })
         .catch((err) => {
@@ -135,7 +135,7 @@ const Cart21Login = ({ handleLogin }) => {
         mobile: user.phoneNumber || "+91 8319697083",
         DoB: "12-03-1999",
       };
-      console.log("userData", userData);
+      // console.log("userData", userData);
 
       const response = await axios.put(
         "http://localhost:8000/update",
@@ -154,7 +154,7 @@ const Cart21Login = ({ handleLogin }) => {
           },
         }
       );
-      console.log("userData", userData);
+      // console.log("userData", userData);
 
       if (response.status === 200 || response.status === 201) {
         // console.log(response.data);
@@ -166,7 +166,7 @@ const Cart21Login = ({ handleLogin }) => {
       alert("Error: " + error.response?.data?.message || "An error occurred");
     }
     // console.log("userData", userData);
-    console.log("JSON.stringify(userData)", JSON.stringify(userData));
+    // console.log("JSON.stringify(userData)", JSON.stringify(userData));
   };
 
   return (
@@ -268,7 +268,7 @@ const Cart21Login = ({ handleLogin }) => {
                       <Button
                         color="white"
                         className="p-0 border-1"
-                        outline
+                        // outline
                         onClick={handleClick}
                       >
                         <span className="d-flex align-items-center ">

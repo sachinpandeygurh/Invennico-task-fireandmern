@@ -10,12 +10,20 @@ function ViewDetails(props) {
   const [flag , setFlag] = useState(false)
 
   useEffect(() => {
-    getUserDetails();
+    if(props.id){
+      getUserDetails()
+    }
   }, [props.id]);
+
   const getUserDetails = async () => {
     try {
       const result = await axios.get(
-        `http://localhost:8000/v1/user/finduser/${props.id}`
+        `http://localhost:8000/v1/user/finduser/${props.id}` ,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
       setUsers(result?.data.result);
       setFlag(true)
@@ -44,7 +52,7 @@ const base64String = Buffer.from(users.profilePicture.data.data).toString("base6
           <p>Loading user details...</p>
         ): (
           <Card>
-           { !flag? (<p className="text-info"> loading...</p>):( <Card.Img className="rounded" variant="top" src={geturl(users)} /> )}
+           { !flag? (<p className="text-info m-auto p-3"> Image loading...</p>):( <Card.Img  className="rounded" variant="top" src={geturl(users)} /> )}
 
             <Card.Body> 
               <Card.Title>

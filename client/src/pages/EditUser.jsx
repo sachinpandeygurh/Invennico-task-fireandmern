@@ -9,7 +9,7 @@ const EditUser = (props) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getUserDetails();
+    if(props.id)getUserDetails();
   }, [props.id]);
 
   const getUserDetails = async () => {
@@ -32,20 +32,26 @@ const EditUser = (props) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-   
     try {
       const result = await axios.put(
         `http://localhost:8000/v1/user/updateuser/${props.id}`,
-        users,
+       {
+        firstName : users.firstName,
+        lastName : users.lastName,
+        email : users.email,
+        mobile : users.mobile,
+        status: users.status
+       },
         {
           headers: { "Content-Type": "application/json" },
         }
       );
 
       if (result.data && result.data.message === "User updated successfully") {
+        
         alert(result.data.message);
-        handleClose();
         navigate("/");
+
       } else {
         console.error("Error updating user:", result.data.message);
         alert("Error updating user: " + result.data.message);
@@ -53,11 +59,13 @@ const EditUser = (props) => {
     } catch (error) {
       console.error("An error occurred:", error);
     }
+
   };
 
   const handleClose = () => {
     props.onHide();
   };
+
   
   return (
     <Modal {...props} aria-labelledby="contained-modal-title-vcenter">

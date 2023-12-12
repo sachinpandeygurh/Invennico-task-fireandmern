@@ -1,8 +1,8 @@
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form, InputGroup, Button } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
-import { Link , useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const NewUser = (props) => {
   const [firstName, setFirstName] = useState("");
@@ -12,8 +12,17 @@ const NewUser = (props) => {
   const [profilePicture, setProfilePicture] = useState("");
   const [mobile, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
-  // const profilePicture ="https://res.cloudinary.com/brandads-tech/image/upload/v1661116705/cld-sample-3.jpg"
-  
+
+  const newForm = () => {
+    setFirstName("");
+    setLastName("");
+    setEmail("");
+    setStatus("");
+    setProfilePicture("");
+    setPhoneNumber("");
+    setAddress("");
+  };
+
   const navigate = useNavigate();
 
   const handleFirstNameChange = (event) => {
@@ -32,10 +41,6 @@ const NewUser = (props) => {
     setStatus(event.target.value);
   };
 
-  // const handleProfilePictureChange = (event) => {
-  //   setProfilePicture(event.target.files[0]);
-  // };
-
   const handlePhoneNumberChange = (event) => {
     setPhoneNumber(event.target.value);
   };
@@ -43,9 +48,12 @@ const NewUser = (props) => {
   const handleAddressChange = (event) => {
     setAddress(event.target.value);
   };
-
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!firstName || !lastName || !email || !status || !mobile || !address) {
+      alert("Please fill in all required fields");
+    }
     try {
       const formData = new FormData();
       formData.append("firstName", firstName);
@@ -56,25 +64,22 @@ const NewUser = (props) => {
       formData.append("phoneNumber", mobile);
       formData.append("address", address);
       formData.append("mobile", mobile);
-      
-      const result = await fetch(`http://localhost:8000/v1/user/adduser`, {
-        method: 'POST',
-        body:formData
-      });
-
-      const data = await result.json();
-      console.log(data)
-
-      if (!firstName , !lastName , !email , !status  , !mobile , !address) {
-      alert('Something went wrong');
-
-      } else {
+      // console.log("formData", formData);
+      const result = await axios.post(
+        `http://localhost:8000/v1/user/adduser`,
+        formData
+      );
+      if (result) {
+        alert('User added successfully.');
+        newForm()
+        props.onHide();
         navigate('/');
-      }
+      }      
+      
     } catch (error) {
-      console.error('An error occurred:', error);
-     
+      console.error("An error occurred:", error);
     }
+    
   };
 
   return (
@@ -119,8 +124,10 @@ const NewUser = (props) => {
 
             <Form.Group className="my-3" controlId="formStatus">
               <Form.Label>Status</Form.Label>
-              <Form.Select value={status} defaultValue="Active" onChange={handleStatusChange}>
-                <option value="" defaultChecked>Select</option>
+              <Form.Select value={status} onChange={handleStatusChange}>
+                <option value="" disabled>
+                  Select
+                </option>
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
               </Form.Select>
@@ -131,7 +138,9 @@ const NewUser = (props) => {
               <Form.Control
                 type="file"
                 accept="image/*"
-                onChange={(e)=>{setProfilePicture(e.target.files[0])}}
+                onChange={(e) => {
+                  setProfilePicture(e.target.files[0]);
+                }}
               />
             </Form.Group>
 
@@ -142,6 +151,8 @@ const NewUser = (props) => {
                 <Form.Control
                   type="tel"
                   placeholder="Enter your phone number"
+                  minLength={10}
+                  maxLength={10}
                   value={mobile}
                   onChange={handlePhoneNumberChange}
                 />
