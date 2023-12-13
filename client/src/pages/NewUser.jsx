@@ -66,7 +66,7 @@ const NewUser = (props) => {
       formData.append("mobile", mobile);
       // console.log("formData", formData);
       const result = await axios.post(
-        `http://localhost:8000/v1/user/adduser`,
+        `https://invennicotask.onrender.com/v1/user/adduser`,
         formData
       );
       if (result) {

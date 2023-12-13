@@ -21,7 +21,7 @@ const TableComponent = () => {
 
   const getUsers = async () => {
     try {
-      const result = await axios.get("http://localhost:8000/v1/user/getuser", {
+      const result = await axios.get("https://invennicotask.onrender.com/v1/user/getuser", {
         headers: {
           "Content-Type": "application/json",
         },
@@ -33,12 +33,13 @@ const TableComponent = () => {
     }
   };
   const handleDelete = async (id) => {
+   
     try {
-      const res = await axios.delete(`http://localhost:8000/v1/user/delete`, {
+      // console.log("body" , body);
+      const res = await axios.delete(`https://invennicotask.onrender.com/v1/user/delete/${id}`, { 
         headers: {
           "Content-Type": "application/json",
         },
-        data: { id },
       });
   
       if (res.status === 200) {

@@ -18,7 +18,7 @@ function ViewDetails(props) {
   const getUserDetails = async () => {
     try {
       const result = await axios.get(
-        `http://localhost:8000/v1/user/finduser/${props.id}` ,
+        `https://invennicotask.onrender.com/v1/user/finduser/${props.id}` ,
         {
           headers: {
             "Content-Type": "application/json",

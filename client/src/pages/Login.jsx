@@ -81,7 +81,7 @@ const Cart21Login = ({ handleLogin }) => {
     } else {
       await axios
         .post(
-          "http://localhost:8000/login",
+          "https://invennicotask.onrender.com/login",
           {
             mobile: number,
           },
@@ -138,7 +138,7 @@ const Cart21Login = ({ handleLogin }) => {
       // console.log("userData", userData);
 
       const response = await axios.put(
-        "http://localhost:8000/update",
+        "https://invennicotask.onrender.com/update",
         {
           email: userData.email,
           mobile: userData.mobile,

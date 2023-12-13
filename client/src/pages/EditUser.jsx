@@ -15,7 +15,7 @@ const EditUser = (props) => {
   const getUserDetails = async () => {
     try {
       const result = await axios.get(
-        `http://localhost:8000/v1/user/finduser/${props.id}`
+        `https://invennicotask.onrender.com/v1/user/finduser/${props.id}`
       );
       setUsers(result?.data?.result);
      
@@ -34,7 +34,7 @@ const EditUser = (props) => {
     event.preventDefault();
     try {
       const result = await axios.put(
-        `http://localhost:8000/v1/user/updateuser/${props.id}`,
+        `https://invennicotask.onrender.com/v1/user/updateuser/${props.id}`,
        {
         firstName : users.firstName,
         lastName : users.lastName,
