@@ -55,14 +55,17 @@ exports.GetUsers = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
   try {
-    const result = await User.deleteOne({ id: req.params._id });
-    res.status(200).json({
-      result,
-      message: "Document deleted successfully",
-    });
+    const result = await User.findById(req.params.id);
+    
+    if (!result) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    await result.deleteOne();
+    res.status(200).json({ success: true, message: "Deleted Successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "An error occurred" });
+    res.status(500).json({ success: false, message: "Error while deleting User", error });
   }
 };
 
